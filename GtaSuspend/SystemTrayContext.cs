@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace GtaSuspend {
 
-  public class MyCustomApplicationContext : ApplicationContext {
+  public class SystemTrayContext : ApplicationContext {
 
     #region Constructors
 
-    public MyCustomApplicationContext() {
+    public SystemTrayContext() {
       // Initialize Tray Icon
       trayIcon = new NotifyIcon() {
         Icon = Resources.AppIcon,

@@ -69,5 +69,32 @@ namespace GtaSuspend.Properties {
                 return ((System.Drawing.Icon)(obj));
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 6AA6151AFB8DECF9EF68AE44DB2BFE0D ähnelt.
+        /// </summary>
+        internal static string SteamApiKey {
+            get {
+                return ResourceManager.GetString("SteamApiKey", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 76561197999266053 ähnelt.
+        /// </summary>
+        internal static string SteamIdEndmann {
+            get {
+                return ResourceManager.GetString("SteamIdEndmann", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die 76561198013771689 ähnelt.
+        /// </summary>
+        internal static string SteamIdVera {
+            get {
+                return ResourceManager.GetString("SteamIdVera", resourceCulture);
+            }
+        }
     }
 }

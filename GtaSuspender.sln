@@ -8,13 +8,19 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
+		Errish|Any CPU = Errish|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Vera|Any CPU = Vera|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Errish|Any CPU.ActiveCfg = Errish|Any CPU
+		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Errish|Any CPU.Build.0 = Errish|Any CPU
 		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Vera|Any CPU.ActiveCfg = Vera|Any CPU
+		{36C0A7BF-B3D5-4B83-9D96-62891DF71850}.Vera|Any CPU.Build.0 = Vera|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

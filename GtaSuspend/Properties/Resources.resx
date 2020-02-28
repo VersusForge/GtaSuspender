@@ -121,4 +121,14 @@
   <data name="AppIcon" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\06b52e09e284542dd99eea45f9f85f68440dbcaf.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SteamApiKey" xml:space="preserve">
+    <value>6AA6151AFB8DECF9EF68AE44DB2BFE0D</value>
+    <comment>Key</comment>
+  </data>
+  <data name="SteamIdEndmann" xml:space="preserve">
+    <value>76561197999266053</value>
+  </data>
+  <data name="SteamIdVera" xml:space="preserve">
+    <value>76561198013771689</value>
+  </data>
 </root>

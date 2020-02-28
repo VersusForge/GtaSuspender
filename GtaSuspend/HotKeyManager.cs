@@ -15,7 +15,7 @@ namespace GtaSuspend {
     NoRepeat = 0x4000
   }
 
-  public static partial class HotKeyManager {
+  public static class HotKeyManager {
 
     #region Constructors
 
@@ -38,11 +38,11 @@ namespace GtaSuspend {
 
     #region Methods
 
-    public static int RegisterHotKey(Keys key, KeyModifiers modifiers) {
+    public static int RegisterHotKey(Keys key, KeyModifiers modifiers, Action<HotKeyEventArgs> action = null) {
       _windowReadyEvent.WaitOne();
       int id = System.Threading.Interlocked.Increment(ref _id);
       _wnd.Invoke(new RegisterHotKeyDelegate(RegisterHotKeyInternal), _hwnd, id, (uint)modifiers, (uint)key);
-      RegistedIds.Add(id);
+      Hotkeys.Add(id, action);
       return id;
     }
 
@@ -51,17 +51,58 @@ namespace GtaSuspend {
     }
 
     public static void UnregisterAllHotKeys() {
-      foreach (var id in RegistedIds) {
+      foreach (var id in Hotkeys.Keys) {
         _wnd.Invoke(new UnRegisterHotKeyDelegate(UnRegisterHotKeyInternal), _hwnd, id);
       }
-      RegistedIds.Clear();
+      Hotkeys.Clear();
     }
 
     #endregion Methods
 
+    #region Classes
+
+    public class MessageWindow : Form {
+
+      #region Constructors
+
+      public MessageWindow() {
+        _wnd = this;
+        _hwnd = this.Handle;
+        _windowReadyEvent.Set();
+      }
+
+      #endregion Constructors
+
+      #region Methods
+
+      protected override void WndProc(ref Message m) {
+        if (m.Msg == WM_HOTKEY) {
+          HotKeyEventArgs e = new HotKeyEventArgs(ref m);
+          HotKeyManager.OnHotKeyPressed(e);
+        }
+
+        base.WndProc(ref m);
+      }
+
+      protected override void SetVisibleCore(bool value) {
+        // Ensure the window never becomes visible
+        base.SetVisibleCore(false);
+      }
+
+      #endregion Methods
+
+      #region Fields
+
+      private const int WM_HOTKEY = 0x312;
+
+      #endregion Fields
+    }
+
+    #endregion Classes
+
     #region Fields
 
-    private static List<int> RegistedIds = new List<int>();
+    private static Dictionary<int, Action<HotKeyEventArgs>> Hotkeys = new Dictionary<int, Action<HotKeyEventArgs>>();
     private static volatile MessageWindow _wnd;
 
     private static volatile IntPtr _hwnd;
@@ -82,7 +123,7 @@ namespace GtaSuspend {
 
     private static void EndAsyncEvent(IAsyncResult iar) {
       var ar = (System.Runtime.Remoting.Messaging.AsyncResult)iar;
-      var invokedMethod = (EventHandler<HotKeyEventArgs>)ar.AsyncDelegate;
+      var invokedMethod = (Action<HotKeyEventArgs>)ar.AsyncDelegate;
 
       try {
         invokedMethod.EndInvoke(iar);
@@ -102,9 +143,10 @@ namespace GtaSuspend {
     }
 
     private static void OnHotKeyPressed(HotKeyEventArgs e) {
-      if (HotKeyManager.HotKeyPressed != null) {
-        HotKeyManager.HotKeyPressed.BeginInvoke(null, e, EndAsyncEvent, null);
+      if (Hotkeys.TryGetValue(e.ID, out var action) && action != null) {
+        action.BeginInvoke(e, EndAsyncEvent, null);
       }
+      HotKeyManager.HotKeyPressed?.BeginInvoke(null, e, EndAsyncEvent, null);
     }
 
     //public static event Action<HotKeyEventArgs> OnHotKeyPressed;
@@ -113,5 +155,38 @@ namespace GtaSuspend {
 
     [DllImport("user32", SetLastError = true)]
     private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
+  }
+
+  public class HotKeyEventArgs : EventArgs {
+
+    #region Properties
+
+    public int ID { get; }
+
+    #endregion Properties
+
+    #region Fields
+
+    public readonly Keys Key;
+    public readonly KeyModifiers Modifiers;
+
+    #endregion Fields
+
+    #region Constructors
+
+    public HotKeyEventArgs(Keys key, KeyModifiers modifiers, int id) {
+      this.Key = key;
+      this.Modifiers = modifiers;
+      this.ID = id;
+    }
+
+    public HotKeyEventArgs(ref Message message) {
+      uint param = (uint)message.LParam.ToInt64();
+      ID = message.WParam.ToInt32();
+      Key = (Keys)((param & 0xffff0000) >> 16);
+      Modifiers = (KeyModifiers)(param & 0x0000ffff);
+    }
+
+    #endregion Constructors
   }
 }
